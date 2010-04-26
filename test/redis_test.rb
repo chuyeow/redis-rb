@@ -232,7 +232,7 @@ class RedisTest < Test::Unit::TestCase
       end
     end
 
-    test "SET with EXPIRE" do
+    test "SET with EXPIRE (i.e. SETEX)" do
       @r.set_with_expire("foo", "s1", 1)
 
       assert_equal "s1", @r.get("foo")
