@@ -16,7 +16,6 @@ class Redis
     BULK_COMMANDS = {
       "set"       => true,
       "setnx"     => true,
-      "setex"     => true,
       "rpush"     => true,
       "lpush"     => true,
       "lset"      => true,
@@ -61,7 +60,6 @@ class Redis
       "del"       => BOOLEAN_PROCESSOR,
       "renamenx"  => BOOLEAN_PROCESSOR,
       "expire"    => BOOLEAN_PROCESSOR,
-      "setex"     => BOOLEAN_PROCESSOR,
       "hset"      => BOOLEAN_PROCESSOR,
       "hexists"   => BOOLEAN_PROCESSOR,
       "info"      => lambda{|r|
@@ -190,7 +188,10 @@ class Redis
     end
 
     def set_with_expire(key, value, ttl)
-      setex(key, ttl, value)
+      multi do
+        set(key, value)
+        expire(key, ttl)
+      end
     end
 
     def mset(*args)
