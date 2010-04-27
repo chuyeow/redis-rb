@@ -333,6 +333,14 @@ class Redis
     @client.call(:setex, key, ttl, value)
   end
 
+  def set_with_expire(key, value, ttl)
+    self.class.deprecate('Redis: Use the setex method instead of set_with_expire if your version of Redis supports the SETEX command')
+    multi do
+      set(key, value)
+      expire(key, ttl)
+    end
+  end
+
   def mset(*args)
     @client.call(:mset, *args)
   end

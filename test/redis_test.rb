@@ -275,6 +275,20 @@ class RedisTest < Test::Unit::TestCase
       assert_equal nil, @r.get("foo")
     end
 
+    test "SET with EXPIRE" do
+      capture_stderr do
+        @r.set_with_expire("bar", "s2", 1)
+
+        assert $stderr.string["Redis: Use the setex method instead of set_with_expire if your version of Redis supports the SETEX command"]
+
+        assert_equal "s2", @r.get("bar")
+
+        sleep 2
+
+        assert_equal nil, @r.get("bar")
+      end
+    end
+
     test "GETSET" do
       @r.set("foo", "bar")
 
